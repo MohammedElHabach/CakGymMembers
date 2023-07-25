@@ -1,0 +1,17 @@
+.error-img-container{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    
+}
+
+.error-img-container img{
+    margin-top: 3rem;
+}
+@media screen and (max-width:608px) {
+    .error-img-container img{
+        width: 70%;
+        margin-top: 5rem;
+
+    }
+}
