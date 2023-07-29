@@ -1,8 +1,11 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import membersService from "./membersService";
+import { toast } from "react-toastify";
 
 const initialState = {
   members: [],
+  expirationDate:"",
+  sessionCounters: {},
   isError: false,
   isSuccess: false,
   isLoading: false,
@@ -35,6 +38,7 @@ export const addMember = createAsyncThunk(
       return await membersService.addMember(memberData, token);
     } catch (err) {
       console.log(err);
+      toast.error(err.message)
       const message =
         (err.response && err.response.data && err.response.data.message) ||
         err.message ||
@@ -80,11 +84,83 @@ export const editMember = createAsyncThunk(
   }
 );
 
+//Get Expiration date by phone number
+export const getExpirationDateByPhone = createAsyncThunk(
+  "member/getExpByPhone",
+  async (phoneNb, thunkApi) => {
+    try {
+      return await membersService.getExpirationDateByPhone(phoneNb);
+    } catch (err) {
+      console.log(err);
+      const message =err.response.data.msg
+      return thunkApi.rejectWithValue(message);
+    }
+  }
+);
+
+export const incrementSessionCounter = createAsyncThunk(
+  "members/incrementSessionCounter",
+  async (memberId, thunkApi) => {
+    try {
+      // You can add server/API calls here if required
+      thunkApi.dispatch(membersSlice.actions.incrementSession(memberId));
+    } catch (err) {
+      console.log(err);
+      const message =
+        (err.response && err.response.data && err.response.data.message) ||
+        err.message ||
+        err.toString();
+      return thunkApi.rejectWithValue(message);
+    }
+  }
+);
+
+export const decrementSessionCounter = createAsyncThunk(
+  "members/decrementSessionCounter",
+  async (memberId, thunkApi) => {
+    try {
+      // You can add server/API calls here if required
+      thunkApi.dispatch(membersSlice.actions.decrementSession(memberId));
+    } catch (err) {
+      console.log(err);
+      const message =
+        (err.response && err.response.data && err.response.data.message) ||
+        err.message ||
+        err.toString();
+      return thunkApi.rejectWithValue(message);
+    }
+  }
+);
+
+
+
 export const membersSlice = createSlice({
   name: "members",
   initialState,
   reducers: {
     reset: (state) => initialState,
+    incrementSession: (state, action) => {
+      const { memberId } = action.payload;
+      state.sessionCounters = {
+        ...state.sessionCounters,
+        [memberId]: (state.sessionCounters[memberId] || 0) + 1,
+      };
+      localStorage.setItem("sessionCounters", JSON.stringify(state.sessionCounters));
+
+    },
+    decrementSession: (state, action) => {
+      const { memberId } = action.payload;
+      state.sessionCounters = {
+        ...state.sessionCounters,
+        [memberId]: Math.max((state.sessionCounters[memberId] || 0) - 1, 0),
+      };
+      localStorage.setItem("sessionCounters", JSON.stringify(state.sessionCounters));
+
+    },
+    setSessionCounters: (state, action) => {
+      state.sessionCounters = action.payload;
+    },
+
   },
   extraReducers: (builder) => {
     builder
@@ -147,7 +223,27 @@ export const membersSlice = createSlice({
         state.isLoading = false;
         state.isError = true;
         state.message = action.payload;
+      })
+      .addCase(getExpirationDateByPhone.pending, (state) => {
+        state.isLoading = true;
+      })
+      .addCase(getExpirationDateByPhone.fulfilled, (state, action) => {
+        state.isLoading = false;
+        state.isSuccess = true;
+        state.expirationDate = action.payload.expirationDate;
+      })
+      .addCase(getExpirationDateByPhone.rejected, (state, action) => {
+        state.isLoading = false;
+        state.isError = true;
+        state.message = action.payload;
+      })
+      .addCase(incrementSessionCounter.fulfilled, (state, action) => {
+        // This case is not needed as we are dispatching the incrementSession action directly
+      })
+      .addCase(decrementSessionCounter.fulfilled, (state, action) => {
+        // This case is not needed as we are dispatching the decrementSession action directly
       });
+      
   },
 });
 

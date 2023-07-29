@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const membersURL = process.env.REACT_APP_URL + "/members";
-
+const expDateURL = membersURL+"/expDate"
 // Get Members
 const getMembers = async (token) => {
   const config = {
@@ -54,10 +54,33 @@ const editMember = async (id,editedMemberData, token) => {
     return response.data;
   };
 
+  //Get expiration date by phone number
+  const getExpirationDateByPhone = async (phone) => {
+    const response = await axios.post(expDateURL,{phone});
+  
+    return response.data;
+  };
+
+  //take attendance
+  const takeAttendance = async (attendanceData, token) => {
+    const config = {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    };
+  
+    const response = await axios.post(membersURL+"/attendance",attendanceData,config);
+  
+    return response.data;
+  };
+
+
 const membersService = {
   getMembers,
   addMember,
   deleteMember,
-  editMember
+  editMember,
+  getExpirationDateByPhone,
+  takeAttendance
 };
 export default membersService;

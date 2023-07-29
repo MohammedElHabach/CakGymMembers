@@ -15,7 +15,7 @@ import {
 } from "@mui/material";
 import { DatePicker } from "@mui/x-date-pickers";
 import { toast } from "react-toastify";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import dayjs from "dayjs";
 import { editMember } from "../../features/Members/membersSlice";
 
@@ -51,6 +51,10 @@ export default function EditDialog(props) {
     props.memberData ? props.memberData.sessions : ""
   );
 
+  const [editedTrainer, setEditedTrainer] = React.useState(() =>
+    props.memberData ? props.memberData.trainer : ""
+  );
+
   const notifyEdited = () => toast.success("Edited Successfully");
   const disptach = useDispatch();
 
@@ -75,6 +79,7 @@ export default function EditDialog(props) {
       setEditedAmountPaid(props.memberData.amountPaid);
       setEditedPtPackage(props.memberData.ptPackage);
       setEditedNbOfSessions(props.memberData.sessions);
+      setEditedTrainer(props.memberData.trainer);
     }
   }, [props.memberData]);
 
@@ -91,6 +96,7 @@ export default function EditDialog(props) {
       amountPaid: editedAmountPaid,
       ptPackage: editedPtPackage,
       sessions: editedNbOfSessions,
+      trainer: editedTrainer,
     };
     disptach(
       editMember({ id: props.editId, editedMemberData: editedMemberData })
@@ -153,7 +159,7 @@ export default function EditDialog(props) {
                 />
                 <DatePicker
                   label="End Date"
-                  sx={{ width: "15rem", marginTop: "1rem" }}
+                  sx={{ width: "15rem", marginTop: "1.5rem" }}
                   value={editedExpirationDate}
                   onChange={handleExpirationDateChange}
                 />
@@ -213,6 +219,14 @@ export default function EditDialog(props) {
                     onChange={(e) => setEditedNbOfSessions(e.target.value)}
                   />
                 )}
+                <TextField
+                  sx={{ marginTop: "0.5rem" }}
+                  label="Trainer"
+                  variant="outlined"
+                  value={editedTrainer}
+                  type="text"
+                  onChange={(e) => setEditedTrainer(e.target.value)}
+                />
               </div>
             </div>
           </DialogContent>

@@ -1,20 +1,60 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import "./Home.css";
 import bgVideo from "../../assets/bgVideo.mp4";
 // import bgVideo2 from "../../assets/bgVideo2.mp4";
 import logo from "../../assets/caklogo-removebg-preview.png";
 import { Link } from "react-router-dom";
+import Footer from "../../Components/Footer/Footer";
+import { useDispatch, useSelector } from "react-redux";
+import { getExpirationDateByPhone } from "../../features/Members/membersSlice";
+import { toast } from "react-toastify";
 const Home = () => {
+  const [showExpDate, setShowExpDate] = useState(false);
+  const [enteredPhone, setEnteredPhone] = useState("");
+  // const [expDate, setExpDate] = useState("");
+
+  const notifyError = () => toast.error("Enter Your Phone Number");
+
+  const dispatch = useDispatch();
+  const { expirationDate, isLoading, isError, isSuccess, message } =
+    useSelector((state) => state.members);
+
+  const handleGetExpDate = (e) => {
+    e.preventDefault();
+    if (enteredPhone.trim() === "") {
+      notifyError();
+      return;
+    }
+
+    dispatch(getExpirationDateByPhone(enteredPhone));
+    setEnteredPhone("");
+    // setExpDate("");
+    setShowExpDate(false);
+  };
+  
+  useEffect(() => {
+    if (expirationDate) {
+      // setExpDate(expirationDate);
+      console.log(expirationDate);
+      setShowExpDate(true);
+    } else if (isError || message) {
+      console.log(message);
+      toast.error(message);
+      setShowExpDate(false);
+      // setExpDate("");
+    }
+  }, [expirationDate,setShowExpDate, isError, message]);
+  
+
+
   return (
     <>
       <section className="showcase">
         <header className="header">
           <h2 className="logo">CAK Gym</h2>
-          <div className="toggle"></div>
         </header>
         <video loop autoPlay muted>
           <source src={bgVideo} type="video/mp4" />
-          {/* Add additional video sources here */}
         </video>
         <div className="overlay"></div>
         <div className="text">
@@ -30,65 +70,84 @@ const Home = () => {
         </div>
         <ul className="social">
           <li>
-            <Link to="#">
-              <img src="https://i.ibb.co/x7P24fL/facebook.png" alt="facebook logo" />
+            <Link target="_blank" to="https://www.facebook.com/cakgym?mibextid=LQQJ4d">
+              <img
+                src="https://i.ibb.co/x7P24fL/facebook.png"
+                alt="facebook logo"
+              />
             </Link>
           </li>
-          <li>
+          {/* <li>
             <Link to="#">
-              <img src="https://i.ibb.co/Wnxq2Nq/twitter.png" alt="twitter logo" />
+              <img
+                src="https://i.ibb.co/Wnxq2Nq/twitter.png"
+                alt="twitter logo"
+              />
             </Link>
-          </li>
+          </li> */}
           <li>
-            <Link to="#">
-              <img src="https://i.ibb.co/ySwtH4B/instagram.png" alt="instagram logo"/>
+            <Link target="_blank" to="https://instagram.com/cak_gym?igshid=MzRlODBiNWFlZA==">
+              <img
+                src="https://i.ibb.co/ySwtH4B/instagram.png"
+                alt="instagram logo"
+              />
             </Link>
           </li>
         </ul>
       </section>
 
-      <section className="SignUp-hero">
-        <div className="form-box">
-          <img className="logo-form" src={logo} alt="logo" />
-          <h3 className="h3-msg" color="black">
-            Kindly Type Your Phone Number To Get Your Subscription Expiration
-            Date
-          </h3>
-          <form id="login" className="input-group">
-            <input
-              type="number"
-              className="input-field-s"
-              placeholder="Phone Number"
-              required
-            />
-
-            <p className="date-membership">Date: 15-9-2022</p>
-            <div className="btn-container">
-              <button className="submit-btn">Submit</button>
+      <section className="top-container">
+        <div className="container">
+          <div className="content">
+            <div className="left-side">
+              <div className="address details">
+                <i className="fas fa-map-marker-alt"></i>
+                <div className="topic">Address</div>
+                <div className="text-one">Lebanon, Centro Mall</div>
+                <div className="text-two">2nd Floor</div>
+              </div>
+              <div className="phone details">
+                <i className="fas fa-phone-alt"></i>
+                <div className="topic">Phone</div>
+                <div className="text-one">+961 01 821 904</div>
+              </div>
+              <div className="email details">
+                <i className="fas fa-envelope"></i>
+                <div className="topic">Email</div>
+                <div className="text-one">codinglab@gmail.com</div>
+              </div>
             </div>
-          </form>
+            <div className="right-side">
+              <img className="logo-form" src={logo} alt="logo" />
+              <div className="topic-text">
+                Kindly type your Phone Number to get you expiration subscription
+                date
+              </div>
+              <p></p>
+              <form onSubmit={handleGetExpDate}>
+                <div className="input-box">
+                  <input
+                    required
+                    className="phone-input"
+                    type="number"
+                    placeholder="Phone Number"
+                    value={enteredPhone}
+                    onChange={(e) => setEnteredPhone(e.target.value)}
+                  />
+                </div>
+                {showExpDate && expirationDate && (
+                  <p>Exp-Date: {expirationDate.split("T")[0]}</p>
+                )}
+
+                <div className="btn-container">
+                  <input className="submit-btn" type="submit" />
+                </div>
+              </form>
+            </div>
+          </div>
         </div>
       </section>
-
-      {/* <div className="menu">
-        <ul>
-          <li>
-            <a href="#">Home</a>
-          </li>
-          <li>
-            <a href="#">News</a>
-          </li>
-          <li>
-            <a href="#">Destination</a>
-          </li>
-          <li>
-            <a href="#">Blog</a>
-          </li>
-          <li>
-            <a href="#">Contact</a>
-          </li>
-        </ul>
-      </div> */}
+      <Footer />
     </>
   );
 };

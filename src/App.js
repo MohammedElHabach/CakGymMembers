@@ -27,6 +27,14 @@ const router = createBrowserRouter([
         path: "/dashboard/admin/members",
         element: <DashboardMembers />,
       },
+      // {
+      //   path: "/dashboard/admin/attendance",
+      //   element: <Attendance />,
+      // },
+      // {
+      //   path: "/dashboard/admin/attendance/show",
+      //   element: <DisplayAttendance/>
+      // },
     ],
   },
 ]);

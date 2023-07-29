@@ -17,10 +17,11 @@ import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
 import PostAddIcon from "@mui/icons-material/PostAdd";
 import { Link, Outlet, useNavigate } from "react-router-dom";
+import NotificationsActiveIcon from "@mui/icons-material/NotificationsActive";
 import { Logout } from "@mui/icons-material";
 import { useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { logout} from "../../features/auth/authSlice";
+import { logout } from "../../features/auth/authSlice";
 const drawerWidth = 200;
 
 const openedMixin = (theme) => ({

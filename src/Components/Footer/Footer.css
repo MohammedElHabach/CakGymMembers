@@ -1,0 +1,88 @@
+.footer {
+  width: 100%;
+  min-height: 38vh;
+  background-color: var(--mainColor);
+  padding: 70px 0;
+  overflow-x: hidden;
+}
+
+.footer-container {
+  max-width: 80%;
+  margin: auto;
+}
+
+.footer-row {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-around;
+}
+
+ul {
+  list-style: none;
+}
+
+.footer-col {
+  flex-basis: 15rem;
+}
+
+.footer-col h4 p {
+  text-align: justify;
+}
+
+.footer-col h4 {
+  font-size: 18px;
+  color: white;
+  text-transform: capitalize;
+  text-shadow: 0.25px 0.25px #ffffff;
+  position: relative;
+  margin-bottom: 30px;
+  margin-top: 1rem;
+  font-weight: 500;
+}
+.footer-col h4::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: -10px;
+  height: 2px;
+  width: 90px;
+  background-color: white;
+}
+.footer-col p {
+  color: white;
+}
+
+.footer-col ul li {
+  color: white;
+}
+
+.footer-col ul li a {
+  font-size: 16px;
+  text-transform: capitalize;
+  color: white;
+  text-decoration: none;
+  display: block;
+  transition: all 0.3s ease;
+  margin-top: 10px;
+}
+
+.footer-col ul li a:hover {
+  color: white;
+  padding-left: 6px;
+}
+.social-links i:hover {
+  color: white;
+}
+.social-links i {
+  display: inline-block;
+  height: 40px;
+  width: 40px;
+  color: white;
+  transition: all 0.3s ease;
+}
+
+.copyrights {
+  color: white;
+  text-align: center;
+  margin-top: 4rem;
+}

@@ -28,6 +28,8 @@ export default function AddDialog(props) {
   const [amountPaid, setAmountPaid] = React.useState();
   const [ptPackage, setPtPackage] = React.useState();
   const [nbOfSessions, setNbOfSessions] = React.useState("");
+  const [trainer, setTrainer] = React.useState("");
+
 
   const notifyError = () => toast.error("Enter All Required Fields");
   const notifyAdded = () => toast.success("Added Successfully");
@@ -50,7 +52,7 @@ export default function AddDialog(props) {
       startDate === null ||
       expirationDate === null ||
       amountPaid.trim() === "" ||
-      ptPackage === null
+      ptPackage === null || trainer.trim()===''
     ) {
       notifyError();
       return;
@@ -66,6 +68,7 @@ export default function AddDialog(props) {
       amountPaid,
       ptPackage,
       sessions: nbOfSessions,
+      trainer
     };
     setMemberName("");
     setPhone("");
@@ -74,12 +77,15 @@ export default function AddDialog(props) {
     setAmountPaid("");
     setPtPackage();
     setNbOfSessions("");
+    setTrainer("")
     disptach(addMember(memberData));
     setDisplaySessionInput(false);
-    notifyAdded();
+    
+      notifyAdded();
+    
     props.onClose();
   };
-
+  
   return (
     <>
       <Dialog
@@ -137,7 +143,7 @@ export default function AddDialog(props) {
                 />
                 <DatePicker
                   label="End Date"
-                  sx={{ width: "15rem", marginTop: "1rem" }}
+                  sx={{ width: "15rem", marginTop: "1.5rem" }}
                   value={expirationDate}
                   onChange={handleExpirationDateChange}
                   renderInput={(params) => <TextField {...params} />}
@@ -192,7 +198,7 @@ export default function AddDialog(props) {
                 </FormControl>
                 {displaySessionInput && (
                   <TextField
-                    sx={{ marginBottom: "1rem", marginTop: "0.5rem" }}
+                    sx={{ marginBottom: "1rem", marginTop: "0.45rem" }}
                     label="Number Of Sessions"
                     type="number"
                     variant="outlined"
@@ -200,6 +206,15 @@ export default function AddDialog(props) {
                     onChange={(e) => setNbOfSessions(e.target.value)}
                   />
                 )}
+                <TextField
+                  required
+                  sx={{ marginTop: "0.5rem" }}
+                  label="Trainer"
+                  variant="outlined"
+                  value={trainer}
+                  type="text"
+                  onChange={(e) => setTrainer(e.target.value)}
+                />
               </div>
             </div>
           </DialogContent>

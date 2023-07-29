@@ -64,7 +64,7 @@ const Login = () => {
               <span></span>
               <label>Password</label>
             </div>
-            <input type="submit" value="Login" />
+            <input className="login_btn" type="submit" value="Login" />
           </form>
         </div>
         <Outlet />
