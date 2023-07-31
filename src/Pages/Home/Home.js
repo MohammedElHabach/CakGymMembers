@@ -11,12 +11,11 @@ import { toast } from "react-toastify";
 const Home = () => {
   const [showExpDate, setShowExpDate] = useState(false);
   const [enteredPhone, setEnteredPhone] = useState("");
-  // const [expDate, setExpDate] = useState("");
 
   const notifyError = () => toast.error("Enter Your Phone Number");
 
   const dispatch = useDispatch();
-  const { expirationDate, isLoading, isError, isSuccess, message } =
+  const { expirationDate, isLoading, isError, message } =
     useSelector((state) => state.members);
 
   const handleGetExpDate = (e) => {
@@ -28,24 +27,21 @@ const Home = () => {
 
     dispatch(getExpirationDateByPhone(enteredPhone));
     setEnteredPhone("");
-    // setExpDate("");
     setShowExpDate(false);
   };
-  
+
   useEffect(() => {
-    if (expirationDate) {
-      // setExpDate(expirationDate);
-      console.log(expirationDate);
+    if (isLoading) {
+      setShowExpDate(false);
+    } else if (expirationDate) {
       setShowExpDate(true);
     } else if (isError || message) {
-      console.log(message);
       toast.error(message);
       setShowExpDate(false);
-      // setExpDate("");
+    } else {
+      setShowExpDate(false);
     }
-  }, [expirationDate,setShowExpDate, isError, message]);
-  
-
+  }, [isLoading, expirationDate, setShowExpDate, isError, message]);
 
   return (
     <>
@@ -66,11 +62,14 @@ const Home = () => {
             your full potential and achieve remarkable results. Stay focused,
             work hard, and let your dedication lead you to greatness!
           </p>
-          <Link to="#">Explore</Link>
+          <a style={{cursor:"pointer"}} href="#exp-date">Explore</a>
         </div>
         <ul className="social">
           <li>
-            <Link target="_blank" to="https://www.facebook.com/cakgym?mibextid=LQQJ4d">
+            <Link
+              target="_blank"
+              to="https://www.facebook.com/cakgym?mibextid=LQQJ4d"
+            >
               <img
                 src="https://i.ibb.co/x7P24fL/facebook.png"
                 alt="facebook logo"
@@ -86,7 +85,10 @@ const Home = () => {
             </Link>
           </li> */}
           <li>
-            <Link target="_blank" to="https://instagram.com/cak_gym?igshid=MzRlODBiNWFlZA==">
+            <Link
+              target="_blank"
+              to="https://instagram.com/cak_gym?igshid=MzRlODBiNWFlZA=="
+            >
               <img
                 src="https://i.ibb.co/ySwtH4B/instagram.png"
                 alt="instagram logo"
@@ -96,7 +98,7 @@ const Home = () => {
         </ul>
       </section>
 
-      <section className="top-container">
+      <section id="exp-date" className="top-container">
         <div className="container">
           <div className="content">
             <div className="left-side">

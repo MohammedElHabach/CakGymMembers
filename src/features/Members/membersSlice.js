@@ -4,7 +4,7 @@ import { toast } from "react-toastify";
 
 const initialState = {
   members: [],
-  expirationDate:"",
+  expirationDate: "",
   sessionCounters: {},
   isError: false,
   isSuccess: false,
@@ -38,7 +38,7 @@ export const addMember = createAsyncThunk(
       return await membersService.addMember(memberData, token);
     } catch (err) {
       console.log(err);
-      toast.error(err.message)
+      toast.error(err.message);
       const message =
         (err.response && err.response.data && err.response.data.message) ||
         err.message ||
@@ -92,7 +92,7 @@ export const getExpirationDateByPhone = createAsyncThunk(
       return await membersService.getExpirationDateByPhone(phoneNb);
     } catch (err) {
       console.log(err);
-      const message =err.response.data.msg
+      const message = err.response.data.msg;
       return thunkApi.rejectWithValue(message);
     }
   }
@@ -132,8 +132,6 @@ export const decrementSessionCounter = createAsyncThunk(
   }
 );
 
-
-
 export const membersSlice = createSlice({
   name: "members",
   initialState,
@@ -145,8 +143,10 @@ export const membersSlice = createSlice({
         ...state.sessionCounters,
         [memberId]: (state.sessionCounters[memberId] || 0) + 1,
       };
-      localStorage.setItem("sessionCounters", JSON.stringify(state.sessionCounters));
-
+      localStorage.setItem(
+        "sessionCounters",
+        JSON.stringify(state.sessionCounters)
+      );
     },
     decrementSession: (state, action) => {
       const { memberId } = action.payload;
@@ -154,13 +154,18 @@ export const membersSlice = createSlice({
         ...state.sessionCounters,
         [memberId]: Math.max((state.sessionCounters[memberId] || 0) - 1, 0),
       };
-      localStorage.setItem("sessionCounters", JSON.stringify(state.sessionCounters));
-
+      localStorage.setItem(
+        "sessionCounters",
+        JSON.stringify(state.sessionCounters)
+      );
     },
     setSessionCounters: (state, action) => {
       state.sessionCounters = action.payload;
     },
-
+    removeSessionCounter: (state, action) => {
+      const { memberId } = action.payload;
+      delete state.sessionCounters[memberId];
+    },
   },
   extraReducers: (builder) => {
     builder
@@ -196,9 +201,14 @@ export const membersSlice = createSlice({
       .addCase(deleteMember.fulfilled, (state, action) => {
         state.isLoading = false;
         state.isSuccess = true;
+        const memberIdToDelete = action.payload.id;
+
         state.members = state.members.filter(
           (member) => member._id !== action.payload.id
         );
+        const updatedSessionCounters = { ...state.sessionCounters };
+        delete updatedSessionCounters[memberIdToDelete];
+        state.sessionCounters = updatedSessionCounters;
       })
       .addCase(deleteMember.rejected, (state, action) => {
         state.isLoading = false;
@@ -236,14 +246,9 @@ export const membersSlice = createSlice({
         state.isLoading = false;
         state.isError = true;
         state.message = action.payload;
-      })
-      .addCase(incrementSessionCounter.fulfilled, (state, action) => {
-        // This case is not needed as we are dispatching the incrementSession action directly
-      })
-      .addCase(decrementSessionCounter.fulfilled, (state, action) => {
-        // This case is not needed as we are dispatching the decrementSession action directly
+        state.expirationDate = null; // Reset the expiration date on rejected API call
+
       });
-      
   },
 });
 

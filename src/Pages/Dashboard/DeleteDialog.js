@@ -14,13 +14,13 @@ export default function DeleteDialog(props) {
   
 
   const notifyDeleted = () => toast.success("Deleted Successfully");
-  const disptach = useDispatch();
+  const dispatch = useDispatch();
 
  
 
   const handleDeleteMember = (e) => {
     e.preventDefault();
-    disptach(deleteMember(props.deleteId))
+    dispatch(deleteMember(props.deleteId))
     notifyDeleted()
     props.onClose()
   }
