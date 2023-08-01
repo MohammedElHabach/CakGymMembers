@@ -6,6 +6,7 @@ const initialState = {
   members: [],
   expirationDate: "",
   sessionCounters: {},
+  trainer:"",
   isError: false,
   isSuccess: false,
   isLoading: false,
@@ -241,13 +242,16 @@ export const membersSlice = createSlice({
         state.isLoading = false;
         state.isSuccess = true;
         state.expirationDate = action.payload.expirationDate;
+        state.ptPackage = action.payload.ptPackage
+        state.trainer = action.payload.trainer
       })
       .addCase(getExpirationDateByPhone.rejected, (state, action) => {
         state.isLoading = false;
         state.isError = true;
         state.message = action.payload;
         state.expirationDate = null; // Reset the expiration date on rejected API call
-
+        state.ptPackage = null
+        state.trainer = ""
       });
   },
 });

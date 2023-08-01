@@ -15,8 +15,9 @@ const Home = () => {
   const notifyError = () => toast.error("Enter Your Phone Number");
 
   const dispatch = useDispatch();
-  const { expirationDate, isLoading, isError, message } =
-    useSelector((state) => state.members);
+  const { expirationDate, trainer, isLoading, isError, message } = useSelector(
+    (state) => state.members
+  );
 
   const handleGetExpDate = (e) => {
     e.preventDefault();
@@ -62,7 +63,9 @@ const Home = () => {
             your full potential and achieve remarkable results. Stay focused,
             work hard, and let your dedication lead you to greatness!
           </p>
-          <a style={{cursor:"pointer"}} href="#exp-date">Explore</a>
+          <a style={{ cursor: "pointer" }} href="#exp-date">
+            Explore
+          </a>
         </div>
         <ul className="social">
           <li>
@@ -138,7 +141,10 @@ const Home = () => {
                   />
                 </div>
                 {showExpDate && expirationDate && (
-                  <p>Exp-Date: {expirationDate.split("T")[0]}</p>
+                  <>
+                    <p>Exp-Date: {expirationDate.split("T")[0]}</p>
+                    <p>Trainer: {trainer} </p>
+                  </>
                 )}
 
                 <div className="btn-container">
